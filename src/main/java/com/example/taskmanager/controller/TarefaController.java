@@ -11,33 +11,41 @@ import java.util.List;
 @RequestMapping("/tarefa")
 public class TarefaController {
 
-    private final TarefaService TarefaService;
+    private final TarefaService tarefaService;
 
-    public TarefaController(TarefaService tarefaService){
-        this.TarefaService = tarefaService;
+    public TarefaController(TarefaService tarefaService) {
+        this.tarefaService = tarefaService;
     }
 
     @GetMapping()
-    public List<Tarefa> listarTarefa(){
-        return TarefaService.listarTarefas();
+    public List<Tarefa> listarTarefa() {
+        return tarefaService.listarTarefas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tarefa> buscarPorId(@PathVariable long id){
-        return TarefaService.buscarPorId(id)
+    public ResponseEntity<Tarefa> buscarPorId(@PathVariable Long id) {
+        return tarefaService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping()
-    public Tarefa criarTarefa(@RequestBody Tarefa tarefa){
-        return TarefaService.salvarTarefa(tarefa);
+    public Tarefa criarTarefa(@RequestBody Tarefa tarefa) {
+        return tarefaService.salvarTarefa(tarefa);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarTarefa(@PathVariable long id){
-        TarefaService.deletarTarefa(id);
+    public ResponseEntity<Void> deletarTarefa(@PathVariable Long id) {
+        tarefaService.deletarTarefa(id);
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Tarefa> atualizar(@PathVariable Long id, @RequestBody Tarefa tarefa) {
+        Tarefa tarefaAtulizada = tarefaService.atualizarTarefa(tarefa, id);
+        return ResponseEntity.ok(tarefaAtulizada);
+
+    }
 }
+
+
