@@ -2,6 +2,7 @@ package com.example.taskmanager.service;
 
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.repository.TarefaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,17 @@ public class TarefaService {
 
     public void deletarTarefa(Long id) {
         tarefaRepository.deleteById(id);
+    }
+
+    public Tarefa atualizarTarefa(Tarefa tarefaUpdate, long id) {
+        Tarefa tarefa = tarefaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada"));
+
+        tarefa.setTitulo(tarefaUpdate.getTitulo());
+        tarefa.setDescricao(tarefaUpdate.getDescricao());
+        tarefa.setStatus(tarefaUpdate.getStatus());
+        tarefa.setDataCriacao(tarefaUpdate.getDataCriacao());
+
+        return tarefaRepository.save(tarefa);
     }
 }
