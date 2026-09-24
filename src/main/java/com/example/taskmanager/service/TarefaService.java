@@ -1,8 +1,10 @@
 package com.example.taskmanager.service;
 
+import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.repository.TarefaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,6 @@ public class TarefaService {
     public TarefaService(TarefaRepository tarefaRepository) {
         this.tarefaRepository = tarefaRepository;
     }
-
     public List<Tarefa> listarTarefas() {
         return tarefaRepository.findAll();
     }
@@ -26,6 +27,9 @@ public class TarefaService {
         return tarefaRepository.findById(id);
     }
 
+    public List<Tarefa> buscarPorStatus (StatusTarefa status){
+        return tarefaRepository.findByStatus(status);
+    }
     public Tarefa salvarTarefa(Tarefa tarefa) {
         return tarefaRepository.save(tarefa);
     }

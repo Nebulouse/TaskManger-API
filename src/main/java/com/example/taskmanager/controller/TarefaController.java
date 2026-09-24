@@ -1,5 +1,6 @@
 package com.example.taskmanager.controller;
 
+import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.service.TarefaService;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,11 @@ public class TarefaController {
         return tarefaService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/status/{status}")
+    public List<Tarefa> buscarPorStatus(@PathVariable StatusTarefa status){
+        return tarefaService.buscarPorStatus(status);
     }
 
     @PostMapping()
