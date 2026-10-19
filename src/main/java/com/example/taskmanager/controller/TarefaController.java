@@ -30,8 +30,8 @@ public class TarefaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/status/{status}")
-    public List<Tarefa> buscarPorStatus(@PathVariable StatusTarefa status){
+    @GetMapping("/")
+    public List<Tarefa> buscarPorStatus(@RequestParam StatusTarefa status){
         return tarefaService.buscarPorStatus(status);
     }
 
