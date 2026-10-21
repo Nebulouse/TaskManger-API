@@ -3,6 +3,8 @@ package com.example.taskmanager.controller;
 import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.service.TarefaService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +38,11 @@ public class TarefaController {
     }
 
     @PostMapping()
-    public Tarefa criarTarefa(@RequestBody Tarefa tarefa) {
-        return tarefaService.salvarTarefa(tarefa);
+    public ResponseEntity<Tarefa> criarTarefa(@RequestBody Tarefa tarefa) {
+        Tarefa tarefaSalva = tarefaService.salvarTarefa(tarefa);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(tarefaSalva);
     }
 
     @DeleteMapping("/{id}")
