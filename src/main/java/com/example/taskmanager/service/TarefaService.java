@@ -4,7 +4,9 @@ import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.repository.TarefaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
