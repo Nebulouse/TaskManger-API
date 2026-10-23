@@ -1,10 +1,10 @@
 package com.example.taskmanager.controller;
 
+import com.example.taskmanager.dto.TarefaRequestDTO;
 import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.service.TarefaService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +38,13 @@ public class TarefaController {
     }
 
     @PostMapping()
-    public ResponseEntity<Tarefa> criarTarefa(@RequestBody Tarefa tarefa) {
+    public ResponseEntity<Tarefa> criarTarefa(@RequestBody TarefaRequestDTO dados) {
+        Tarefa tarefa = new Tarefa();
+        tarefa.setTitulo(dados.getTitulo());
+        tarefa.setDescricao(dados.getDescricao());
+
         Tarefa tarefaSalva = tarefaService.salvarTarefa(tarefa);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(tarefaSalva);
