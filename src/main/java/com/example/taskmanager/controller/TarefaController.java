@@ -1,6 +1,7 @@
 package com.example.taskmanager.controller;
 
 import com.example.taskmanager.dto.TarefaRequestDTO;
+import com.example.taskmanager.dto.TarefaResponseDTO;
 import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.service.TarefaService;
@@ -21,24 +22,36 @@ public class TarefaController {
     }
 
     @GetMapping()
-    public List<Tarefa> listarTarefa() {
-        return tarefaService.listarTarefas();
+    public List<TarefaResponseDTO> listarTarefa() {
+
+        List<Tarefa> allTarefas = tarefaService.listarTarefas();
+
+        return allTarefas
+                .stream()
+                .map(TarefaResponseDTO::converterParaDTO)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tarefa> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<TarefaResponseDTO> buscarPorId(@PathVariable Long id) {
+
         return tarefaService.buscarPorId(id)
+                .map(TarefaResponseDTO::converterParaDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/")
-    public List<Tarefa> buscarPorStatus(@RequestParam StatusTarefa status){
-        return tarefaService.buscarPorStatus(status);
+    @GetMapping("/status")
+    public List<TarefaResponseDTO> buscarPorStatus(@RequestParam StatusTarefa status){
+         List<Tarefa> allStatus = tarefaService.buscarPorStatus(status);
+         return allStatus
+                 .stream()
+                 .map(TarefaResponseDTO::converterParaDTO)
+                 .toList();
     }
 
     @PostMapping()
-    public ResponseEntity<Tarefa> criarTarefa(@RequestBody TarefaRequestDTO dados) {
+    public ResponseEntity<TarefaResponseDTO> criarTarefa(@RequestBody TarefaRequestDTO dados) {
         Tarefa tarefa = new Tarefa();
         tarefa.setTitulo(dados.getTitulo());
         tarefa.setDescricao(dados.getDescricao());
@@ -47,7 +60,7 @@ public class TarefaController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(tarefaSalva);
+                .body(TarefaResponseDTO.converterParaDTO(tarefaSalva));
     }
 
     @DeleteMapping("/{id}")
@@ -57,9 +70,15 @@ public class TarefaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarefa> atualizar(@PathVariable Long id, @RequestBody Tarefa tarefa) {
+    public ResponseEntity<TarefaResponseDTO> atualizar(@PathVariable Long id, @RequestBody TarefaRequestDTO request) {
+        Tarefa tarefa = new Tarefa();
+        tarefa.setTitulo(request.getTitulo());
+        tarefa.setDescricao(request.getDescricao());
+
         Tarefa tarefaAtulizada = tarefaService.atualizarTarefa(tarefa, id);
-        return ResponseEntity.ok(tarefaAtulizada);
+        TarefaResponseDTO resposta = TarefaResponseDTO.converterParaDTO(tarefaAtulizada);
+
+        return ResponseEntity.ok(resposta);
 
     }
 }
