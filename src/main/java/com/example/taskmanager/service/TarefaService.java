@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,9 @@ public class TarefaService {
         return tarefaRepository.findByStatus(status);
     }
     public Tarefa salvarTarefa(Tarefa tarefa) {
+        tarefa.setStatus(StatusTarefa.PENDENTE);
+        tarefa.setDataCriacao(LocalDate.now());
+
         return tarefaRepository.save(tarefa);
     }
 
@@ -44,8 +48,6 @@ public class TarefaService {
 
         tarefa.setTitulo(tarefaUpdate.getTitulo());
         tarefa.setDescricao(tarefaUpdate.getDescricao());
-        tarefa.setStatus(tarefaUpdate.getStatus());
-        tarefa.setDataCriacao(tarefaUpdate.getDataCriacao());
 
         return tarefaRepository.save(tarefa);
     }
