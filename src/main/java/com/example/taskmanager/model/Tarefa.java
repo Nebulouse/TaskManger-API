@@ -28,6 +28,10 @@ public class Tarefa {
         this.dataCriacao = dataCriacao;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getTitulo() {
         return titulo;
     }
