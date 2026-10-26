@@ -39,7 +39,10 @@ public class TarefaService {
     }
 
     public void deletarTarefa(Long id) {
-        tarefaRepository.deleteById(id);
+        Tarefa tarefa = tarefaRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Tarefa não encontrada"));
+        tarefaRepository.delete(tarefa);
     }
 
     public Tarefa atualizarTarefa(Tarefa tarefaUpdate, long id) {
