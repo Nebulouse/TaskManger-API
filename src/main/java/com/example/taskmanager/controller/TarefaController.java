@@ -5,6 +5,7 @@ import com.example.taskmanager.dto.TarefaResponseDTO;
 import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.service.TarefaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +52,7 @@ public class TarefaController {
     }
 
     @PostMapping()
-    public ResponseEntity<TarefaResponseDTO> criarTarefa(@RequestBody TarefaRequestDTO dados) {
+    public ResponseEntity<TarefaResponseDTO> criarTarefa(@Valid @RequestBody TarefaRequestDTO dados) {
         Tarefa tarefa = new Tarefa();
         tarefa.setTitulo(dados.getTitulo());
         tarefa.setDescricao(dados.getDescricao());
@@ -70,7 +71,7 @@ public class TarefaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TarefaResponseDTO> atualizar(@PathVariable Long id, @RequestBody TarefaRequestDTO request) {
+    public ResponseEntity<TarefaResponseDTO> atualizar(@PathVariable Long id,@Valid @RequestBody TarefaRequestDTO request) {
         Tarefa tarefa = new Tarefa();
         tarefa.setTitulo(request.getTitulo());
         tarefa.setDescricao(request.getDescricao());
