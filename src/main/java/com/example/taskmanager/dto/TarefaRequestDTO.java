@@ -1,8 +1,15 @@
 package com.example.taskmanager.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class TarefaRequestDTO {
 
+    @NotBlank(message = "O título é obrigatório")
+    @Size(max = 100, message = "O título deve ter no máximo 100 caracteres!")
     private String titulo;
+
+    @Size(max = 500, message = "A descrição deve ter no máximo 500 caracteres!")
     private String descricao;
 
     public TarefaRequestDTO() {
