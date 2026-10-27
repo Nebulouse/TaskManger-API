@@ -49,6 +49,13 @@ public class TarefaService {
         Tarefa tarefa = tarefaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada"));
 
+        if (tarefa.getStatus() == StatusTarefa.CONCLUIDA) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Tarefa concluída não pode ser atualizada!"
+            );
+        }
+
         tarefa.setTitulo(tarefaUpdate.getTitulo());
         tarefa.setDescricao(tarefaUpdate.getDescricao());
 
