@@ -2,6 +2,7 @@ package com.example.taskmanager.controller;
 
 import com.example.taskmanager.dto.TarefaRequestDTO;
 import com.example.taskmanager.dto.TarefaResponseDTO;
+import com.example.taskmanager.mapper.TarefaMapper;
 import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.service.TarefaService;
@@ -29,7 +30,7 @@ public class TarefaController {
 
         return allTarefas
                 .stream()
-                .map(TarefaResponseDTO::converterParaDTO)
+                .map(TarefaMapper::toDTO)
                 .toList();
     }
 
@@ -53,15 +54,13 @@ public class TarefaController {
 
     @PostMapping()
     public ResponseEntity<TarefaResponseDTO> criarTarefa(@Valid @RequestBody TarefaRequestDTO dados) {
-        Tarefa tarefa = new Tarefa();
-        tarefa.setTitulo(dados.getTitulo());
-        tarefa.setDescricao(dados.getDescricao());
 
+        Tarefa tarefa = TarefaMapper.toEntity(dados);
         Tarefa tarefaSalva = tarefaService.salvarTarefa(tarefa);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(TarefaResponseDTO.converterParaDTO(tarefaSalva));
+                .body(TarefaMapper.toDTO(tarefaSalva));
     }
 
     @DeleteMapping("/{id}")
