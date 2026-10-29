@@ -2,6 +2,7 @@ package com.example.taskmanager.controller;
 
 import com.example.taskmanager.dto.TarefaRequestDTO;
 import com.example.taskmanager.dto.TarefaResponseDTO;
+import com.example.taskmanager.dto.TarefaUpdateDTO;
 import com.example.taskmanager.mapper.TarefaMapper;
 import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
@@ -70,15 +71,12 @@ public class TarefaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TarefaResponseDTO> atualizar(@PathVariable Long id,@Valid @RequestBody TarefaRequestDTO request) {
-        Tarefa tarefa = new Tarefa();
-        tarefa.setTitulo(request.getTitulo());
-        tarefa.setDescricao(request.getDescricao());
+    public ResponseEntity<TarefaResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody TarefaUpdateDTO dados) {
+        Tarefa tarefaUpdate = TarefaMapper.toEntity(dados);
 
-        Tarefa tarefaAtulizada = tarefaService.atualizarTarefa(tarefa, id);
-        TarefaResponseDTO resposta = TarefaResponseDTO.converterParaDTO(tarefaAtulizada);
+        Tarefa tarefaAtualizada = tarefaService.atualizarTarefa(tarefaUpdate,id);
 
-        return ResponseEntity.ok(resposta);
+        return ResponseEntity.ok(TarefaMapper.toDTO(tarefaAtualizada));
 
     }
 }
