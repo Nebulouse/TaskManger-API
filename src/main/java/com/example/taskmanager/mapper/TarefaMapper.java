@@ -2,6 +2,7 @@ package com.example.taskmanager.mapper;
 
 import com.example.taskmanager.dto.TarefaRequestDTO;
 import com.example.taskmanager.dto.TarefaResponseDTO;
+import com.example.taskmanager.dto.TarefaUpdateDTO;
 import com.example.taskmanager.model.Tarefa;
 
 public final class TarefaMapper {
@@ -23,5 +24,14 @@ public final class TarefaMapper {
                 tarefa.getDescricao(),
                 tarefa.getStatus(),
                 tarefa.getDataCriacao());
+    }
+
+    public static Tarefa toEntity(TarefaUpdateDTO updateDTO) {
+        Tarefa tarefa = new Tarefa();
+
+        tarefa.setTitulo(updateDTO.getTitulo());
+        tarefa.setDescricao(updateDTO.getDescricao());
+
+        return tarefa;
     }
 }
