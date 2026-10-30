@@ -4,6 +4,8 @@ import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.repository.TarefaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,8 +22,8 @@ public class TarefaService {
     public TarefaService(TarefaRepository tarefaRepository) {
         this.tarefaRepository = tarefaRepository;
     }
-    public List<Tarefa> listarTarefas() {
-        return tarefaRepository.findAll();
+    public Page<Tarefa> listarTarefas(Pageable pageable) {
+        return tarefaRepository.findAll(pageable);
     }
 
     public Optional<Tarefa> buscarPorId(long id) {
