@@ -8,6 +8,9 @@ import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.service.TarefaService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +28,11 @@ public class TarefaController {
     }
 
     @GetMapping()
-    public List<TarefaResponseDTO> listarTarefa() {
+    public Page<TarefaResponseDTO> listarTarefas(
+            @PageableDefault(size = 10) Pageable pageable){
 
-        List<Tarefa> allTarefas = tarefaService.listarTarefas();
-
-        return allTarefas
-                .stream()
-                .map(TarefaMapper::toDTO)
-                .toList();
+        return tarefaService.listarTarefas(pageable)
+                .map(TarefaMapper::toDTO);
     }
 
     @GetMapping("/{id}")
