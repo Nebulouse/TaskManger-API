@@ -63,4 +63,8 @@ public class TarefaService {
 
         return tarefaRepository.save(tarefa);
     }
+
+    public List<Tarefa> buscarPorNome(String titulo){
+        return tarefaRepository.findByName(titulo);
+    }
 }
