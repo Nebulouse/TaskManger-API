@@ -39,7 +39,7 @@ public class TarefaController {
     public ResponseEntity<TarefaResponseDTO> buscarPorId(@PathVariable Long id) {
 
         return tarefaService.buscarPorId(id)
-                .map(TarefaResponseDTO::converterParaDTO)
+                .map(TarefaMapper::toDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -49,7 +49,7 @@ public class TarefaController {
          List<Tarefa> allStatus = tarefaService.buscarPorStatus(status);
          return allStatus
                  .stream()
-                 .map(TarefaResponseDTO::converterParaDTO)
+                 .map(TarefaMapper::toDTO)
                  .toList();
     }
 
@@ -77,7 +77,16 @@ public class TarefaController {
         Tarefa tarefaAtualizada = tarefaService.atualizarTarefa(tarefaUpdate,id);
 
         return ResponseEntity.ok(TarefaMapper.toDTO(tarefaAtualizada));
+    }
 
+    @GetMapping("/titulo")
+    public List<TarefaResponseDTO> buscarPorNome(@RequestParam String titulo) {
+        List<Tarefa> tarefasEncontradas = tarefaService.buscarPorNome(titulo);
+
+        return tarefasEncontradas
+                .stream()
+                .map(TarefaMapper::toDTO)
+                .toList();
     }
 }
 
