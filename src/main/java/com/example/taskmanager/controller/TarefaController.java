@@ -57,7 +57,9 @@ public class TarefaController {
     public ResponseEntity<TarefaResponseDTO> criarTarefa(@Valid @RequestBody TarefaRequestDTO dados) {
 
         Tarefa tarefa = TarefaMapper.toEntity(dados);
-        Tarefa tarefaSalva = tarefaService.salvarTarefa(tarefa);
+        Long categoriaId = dados.getCategoriaId();
+
+        Tarefa tarefaSalva = tarefaService.salvarTarefa(tarefa,categoriaId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
