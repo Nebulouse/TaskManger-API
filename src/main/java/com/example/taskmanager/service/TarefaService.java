@@ -1,7 +1,9 @@
 package com.example.taskmanager.service;
 
+import com.example.taskmanager.model.Categoria;
 import com.example.taskmanager.model.StatusTarefa;
 import com.example.taskmanager.model.Tarefa;
+import com.example.taskmanager.repository.CategoriaRepository;
 import com.example.taskmanager.repository.TarefaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -17,10 +19,14 @@ import java.util.Optional;
 @Service
 public class TarefaService {
 
+    private final CategoriaRepository categoriaRepository;
     private final TarefaRepository tarefaRepository;
 
-    public TarefaService(TarefaRepository tarefaRepository) {
+    public TarefaService(TarefaRepository tarefaRepository,
+                         CategoriaRepository categoriaRepository) {
+
         this.tarefaRepository = tarefaRepository;
+        this.categoriaRepository = categoriaRepository;
     }
     public Page<Tarefa> listarTarefas(Pageable pageable) {
         return tarefaRepository.findAll(pageable);
@@ -33,7 +39,16 @@ public class TarefaService {
     public List<Tarefa> buscarPorStatus (StatusTarefa status){
         return tarefaRepository.findByStatus(status);
     }
-    public Tarefa salvarTarefa(Tarefa tarefa) {
+
+    public Tarefa salvarTarefa(Tarefa tarefa, Long categoriaId) {
+
+        if (categoriaId != null){
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada!"));
+
+        tarefa.setCategoria(categoria);
+        }
+
         tarefa.setStatus(StatusTarefa.PENDENTE);
         tarefa.setDataCriacao(LocalDate.now());
 
