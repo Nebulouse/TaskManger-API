@@ -11,6 +11,7 @@ public class TarefaRequestDTO {
 
     @Size(max = 500, message = "A descrição deve ter no máximo 500 caracteres!")
     private String descricao;
+    private Long categoriaId;
 
     public TarefaRequestDTO() {
     }
@@ -29,5 +30,13 @@ public class TarefaRequestDTO {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
     }
 }
