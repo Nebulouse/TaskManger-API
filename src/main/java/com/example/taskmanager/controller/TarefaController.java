@@ -41,7 +41,7 @@ public class TarefaController {
             description = "Lista todas as tarefas existentes"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200")
+            @ApiResponse(responseCode = "200", description = "Lista de tarefas retornada com sucesso")
     })
 
     public Page<TarefaResponseDTO> listarTarefas(
@@ -87,6 +87,16 @@ public class TarefaController {
     }
 
     @PostMapping()
+    @Operation(
+            summary = "Cria tarefa",
+            description = "Cria uma nova tarefa no banco"
+    )
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "201", description = "Tarefa criada com sucesso!"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+    })
+
     public ResponseEntity<TarefaResponseDTO> criarTarefa(@Valid @RequestBody TarefaRequestDTO dados) {
 
         Tarefa tarefa = TarefaMapper.toEntity(dados);
@@ -100,12 +110,31 @@ public class TarefaController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Deleta tarefa",
+            description = "Apaga uma tarefa existente no banco"
+    )
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "204", description = "Tarefa excluída com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Tarefa não encotrada")
+    })
+
     public ResponseEntity<Void> deletarTarefa(@PathVariable Long id) {
         tarefaService.deletarTarefa(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Atualiza tarefa",
+            description = "Atualiza uma tarefa em específico pelo seu ID"
+    )
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Tarefa atualizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Tarefa não encontrada"),
+            @ApiResponse(responseCode = "409", description = "Não é permitido atualizar uma tarefa concluída")
+    })
     public ResponseEntity<TarefaResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody TarefaUpdateDTO dados) {
         Tarefa tarefaUpdate = TarefaMapper.toEntity(dados);
 
@@ -115,6 +144,14 @@ public class TarefaController {
     }
 
     @GetMapping("/titulo")
+    @Operation(
+            summary = "Busca por título",
+            description = "Busca uma tarefa por um título específico"
+    )
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso, podendo retornar uma lista vazia"),
+    })
+
     public List<TarefaResponseDTO> buscarPorNome(@RequestParam String titulo) {
         List<Tarefa> tarefasEncontradas = tarefaService.buscarPorNome(titulo);
 
