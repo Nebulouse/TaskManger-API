@@ -47,6 +47,15 @@ public class CategoriaController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Listar categoria pelo ID",
+            description = "Retorna uma categoria cadastrada por um ID específico."
+    )
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Categoria encontrada"),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+    })
+
     public ResponseEntity<CategoriaResponseDTO> buscarPorId(@PathVariable Long id) {
         Categoria categoria = categoriaService.buscarPorId(id);
         return ResponseEntity.ok(CategoriaMapper.toDTO(categoria));
