@@ -1,0 +1,83 @@
+package com.example.taskmanager;
+
+import com.example.taskmanager.model.Categoria;
+import com.example.taskmanager.model.StatusTarefa;
+import com.example.taskmanager.model.Tarefa;
+import com.example.taskmanager.repository.CategoriaRepository;
+import com.example.taskmanager.repository.TarefaRepository;
+import com.example.taskmanager.service.TarefaService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+public class TarefaServiceTest {
+
+    @Mock
+    private TarefaRepository tarefaRepository;
+
+    @Mock
+    private CategoriaRepository categoriaRepository;
+
+    @InjectMocks
+    private TarefaService tarefaService;
+
+    @Test
+    void deveCriarTarefaComStatusPendente() {
+
+        // Arrange
+        Tarefa tarefa = new Tarefa(
+                "Estudar Testes",
+                "Aprender JUnit e Mockito",
+                null,
+                null
+        );
+
+        when(tarefaRepository.save(tarefa)).thenReturn(tarefa);
+
+        // Act
+        Tarefa resultado = tarefaService.salvarTarefa(tarefa, null);
+
+        // Assert
+        assertEquals(StatusTarefa.PENDENTE, resultado.getStatus());
+        assertEquals(LocalDate.now(), resultado.getDataCriacao());
+
+        verify(tarefaRepository).save(tarefa);
+    }
+
+    @Test
+    void deveCriarTarefaAssociadaAUmaCategoria() {
+
+        Categoria categoria = new Categoria("Jogos");
+
+
+        Tarefa tarefa = new Tarefa(
+                "Estudar Testes",
+                "Aprender JUnit e Mockito",
+                null,
+                null);
+
+        when(categoriaRepository.findById(1L))
+                .thenReturn(Optional.of(categoria));
+
+        when(tarefaRepository.save(tarefa)).thenReturn(tarefa);
+
+        Tarefa resultado = tarefaService.salvarTarefa(tarefa, 1L);
+
+        assertSame(categoria,resultado.getCategoria());
+
+        verify(categoriaRepository).findById(1L);
+        verify(tarefaRepository).save(tarefa);
+    }
+
+}
