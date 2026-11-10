@@ -6,6 +6,7 @@ import com.example.taskmanager.model.Tarefa;
 import com.example.taskmanager.repository.CategoriaRepository;
 import com.example.taskmanager.repository.TarefaRepository;
 import com.example.taskmanager.service.TarefaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,10 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TarefaServiceTest {
@@ -79,5 +78,25 @@ public class TarefaServiceTest {
         verify(categoriaRepository).findById(1L);
         verify(tarefaRepository).save(tarefa);
     }
+
+        @Test
+        public void deveLancarExcessaoQuandoCategoriaNaoExistir(){
+
+            Tarefa tarefa = new Tarefa(
+                    "Estudar Testes",
+                    "Aprender JUnit e Mockito",
+                    null,
+                    null
+            );
+
+
+            when(categoriaRepository.findById(999L)).thenReturn(Optional.empty());
+
+            assertThrows(EntityNotFoundException.class,
+                    () -> tarefaService.salvarTarefa(tarefa, 999L));
+
+            verify(categoriaRepository).findById(999L);
+            verify(tarefaRepository, never()).save(tarefa);
+        }
 
 }
