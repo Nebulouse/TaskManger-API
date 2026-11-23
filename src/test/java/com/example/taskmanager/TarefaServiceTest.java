@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -99,4 +101,21 @@ public class TarefaServiceTest {
             verify(tarefaRepository, never()).save(tarefa);
         }
 
+        @Test
+        public void deveRetornarListaVaziaQuandoNaoExistiremTarefasComStatus(){
+
+            Tarefa tarefa = new Tarefa(
+                    "Estudar Testes",
+                    "Aprender JUnit e Mockito",
+                    StatusTarefa.PENDENTE,
+                    null
+            );
+
+            tarefaRepository.save(tarefa);
+
+            List<Tarefa> resultado = tarefaRepository.findByStatus(StatusTarefa.CONCLUIDA);
+
+            assertTrue(resultado.isEmpty());
+
+        }
 }
