@@ -62,4 +62,22 @@ public class TarefaControllerTest {
 
     }
 
+    @Test
+    void deveRetornar200QuandoTarefaExistir() throws Exception {
+
+        Tarefa tarefa = new Tarefa(
+                "Estudar Spring Boot",
+                "Aprender testes de Controller",
+                StatusTarefa.PENDENTE,
+                LocalDate.now()
+        );
+
+        when(tarefaService.buscarPorId(1L))
+                .thenReturn(Optional.of(tarefa));
+
+        mockMvc.perform(get("/tarefa/1"))
+                .andExpect(status()
+                .isOk())
+                .andExpect(jsonPath("$.titulo").value("Estudar Spring Boot"));
+    }
 }
