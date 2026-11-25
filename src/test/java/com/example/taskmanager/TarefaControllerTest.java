@@ -14,8 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -49,6 +50,16 @@ public class TarefaControllerTest {
                         .value("Estudar Spring Boot"))
                 .andExpect(jsonPath("$.content[0].status")
                         .value("PENDENTE"));
+    }
+
+    @Test
+    void deveRetornar404QuandoTarefaNãoExistir() throws Exception {
+
+        when(tarefaService.buscarPorId(anyLong())).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/tarefa/999"))
+                .andExpect(status().isNotFound());
+
     }
 
 }
